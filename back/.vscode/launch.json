@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-OnlineBookingApplication<online_booking>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.booking.online_booking.OnlineBookingApplication",
+            "projectName": "online_booking",
+            "args": ""
+        }
+    ]
+}
