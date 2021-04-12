@@ -11,11 +11,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-public class Role {
-
+public class Logement {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_role;
-
-    private String role;
+    private Integer id_logement;
+    private String logement;
 }

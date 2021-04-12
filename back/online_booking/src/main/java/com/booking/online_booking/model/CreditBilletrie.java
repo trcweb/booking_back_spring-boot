@@ -10,6 +10,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "credit_billetrie")
 public class CreditBilletrie {
@@ -23,57 +28,4 @@ public class CreditBilletrie {
     private Double solde;
     private Date date;
     private String type;
-    
-    public CreditBilletrie() {
-    }
-
-    public CreditBilletrie(Integer id_creditb, SoldeGarentie garentie, Double solde, Date date, String type) {
-        this.id_creditb = id_creditb;
-        this.garentie = garentie;
-        this.solde = solde;
-        this.date = date;
-        this.type = type;
-    }
-
-    public Integer getId_creditb() {
-        return id_creditb;
-    }
-
-    public void setId_creditb(Integer id_creditb) {
-        this.id_creditb = id_creditb;
-    }
-
-    public SoldeGarentie getGarentie() {
-        return garentie;
-    }
-
-    public void setGarentie(SoldeGarentie garentie) {
-        this.garentie = garentie;
-    }
-
-    public Double getSolde() {
-        return solde;
-    }
-
-    public void setSolde(Double solde) {
-        this.solde = solde;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-    
-    
 }

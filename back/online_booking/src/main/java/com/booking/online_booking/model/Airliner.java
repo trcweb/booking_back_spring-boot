@@ -11,11 +11,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-public class Role {
-
+public class Airliner {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_role;
-
-    private String role;
+    private Integer id_airliner;
+    private String nom;
+    private String code_iata;
+    private String email;
+    private String tel;
 }

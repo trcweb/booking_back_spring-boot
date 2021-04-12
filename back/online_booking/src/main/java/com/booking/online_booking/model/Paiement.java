@@ -8,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,16 +15,16 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "credit_hotel")
-public class CreditHotel {
+public class Paiement {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_credith;
+    private Integer id_paiement;
+
     @OneToOne
-    @JoinColumn(name = "id_solde")
-    private SoldeGarentie garentie;
-    private Double solde;
-    private Date date;
-    private String type;    
+    @JoinColumn(name = "id_facture")
+    private Facture facture;
+    private String mode_paiement;
+    private Date date_paiement;
+    private Double montant;
 }

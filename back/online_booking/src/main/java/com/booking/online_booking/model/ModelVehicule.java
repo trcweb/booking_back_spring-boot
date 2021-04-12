@@ -14,24 +14,24 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "detail_typologie")
-public class DetailTypologie {
+@Table(name = "model_vehicule")
+public class ModelVehicule {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_detailtypologie;
-
+    private Integer id_model;
     @ManyToOne
-    @JoinColumn(name = "id_detailhotel")
-    private DetailHotel detailHotel; 
-
+    @JoinColumn(name = "id_agence_location")
+    private AgenceLocation agenceLocation;
     @ManyToOne
-    @JoinColumn(name = "id_typologie")
-    private Typologie typologie;
+    @JoinColumn(name = "id_categorie")
+    private CategorieVehicule categorieVehicule;
+    private boolean disponible;
+    private String marque;
+    private String model;
+    private int capacite;
+    private int nbr_porte;
+    private boolean auto;
+    private boolean climatise;
 
-    private Double prix_typologie;
-
-    public boolean filterByPriceRange(int start, int end){
-        return prix_typologie >= start && prix_typologie <= end ;
-    }
 }

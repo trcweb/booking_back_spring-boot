@@ -1,7 +1,5 @@
 package com.booking.online_booking.model;
 
-import java.sql.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,16 +14,20 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "credit_hotel")
-public class CreditHotel {
+@Table(name = "user_agence")
+public class UserAgence {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_credith;
+    private Integer id_agence;
+
     @OneToOne
-    @JoinColumn(name = "id_solde")
-    private SoldeGarentie garentie;
-    private Double solde;
-    private Date date;
-    private String type;    
+    @JoinColumn(name = "id_account")
+    private Account account;
+
+    private String matricule_fiscale;
+    private String registre_commerce;
+    private String raison_social;
+    private String adresse_agence;
+    private String mobile_agence;
 }
