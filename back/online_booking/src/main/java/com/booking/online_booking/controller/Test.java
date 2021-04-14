@@ -3,6 +3,7 @@ package com.booking.online_booking.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.amadeus.Params;
 import com.amadeus.exceptions.ResponseException;
 import com.amadeus.resources.HotelOffer;
 import com.booking.online_booking.model.DetailTypologie;
@@ -39,14 +40,9 @@ public class Test {
         return amadeusService.airportAndCitySearch(searchTerm, subType);
     }
 
-    @GetMapping("/hotel/{cityCode}/{checkInDate}/{checkOutDate}/{adults}/{roomQuantity}")
-    public List<HotelOffer> hotelSearch(
-    @PathVariable("cityCode") String cityCode,
-    @PathVariable("checkInDate") String checkInDate,
-    @PathVariable("checkOutDate") String checkOutDate,
-    @PathVariable("adults") Integer adults,
-    @PathVariable("roomQuantity") Integer roomQuantity) throws ResponseException {
-        return amadeusService.hotelSearch(cityCode, checkInDate, checkOutDate, adults, roomQuantity, null, null, null);
+    @GetMapping("/test1")
+    public List<HotelOffer> hotelSearch() throws ResponseException {
+        return amadeusService.hotelSearch("LON", "2021-04-16", "2021-04-19", 3, 2, null, null, null);
     }
 
     @PostMapping("/test2")
@@ -54,9 +50,20 @@ public class Test {
         return amadeusService.flightOffersSearch(search);
     }
 
-    // @GetMapping("/test3")
-    // public List<DetailTypologie> test3() {
-    //     List<DetailTypologie> dt = detailTypologieService.searchByCityAndDateAndNbr(5, "2021-05-16", "MUC").getContent();
-    //     return dt;
-    // }
+    @GetMapping("/test3")
+    public Params test3() {
+        Params p = Params.with("cityCode", "lon")
+                            .and("checkInDate", "32131")
+                            .and("checkOutDate", "35151")
+                            .and("adults", "5")
+                            .and("roomQuantity", "2")
+                            .and("currency", "EUR")
+                            .and("includeClosed", "false")
+                            .and("paymentPolicy", "NONE")
+                            .and("includeClosed", "false")
+                            .and("bestRateOnly", "true")
+                            .and("view", "FULL")
+                            .and("sort", "PRICE");
+        return p;
+    }
 }

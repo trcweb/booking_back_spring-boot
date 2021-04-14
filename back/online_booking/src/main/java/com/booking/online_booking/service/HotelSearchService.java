@@ -23,15 +23,18 @@ public class HotelSearchService {
     public void searchOffers(String cityCode,
                             String checkInDate,
                             String checkOutDate,
-                            int adults,
-                            int roomQuantity,
+                            List<Integer> rooms,
                             List<Integer> ratings,
                             int[] priceRange,
                             NextPage next) throws ResponseException{
         List<HotelOffer> amadeusOffers = null;
-        Slice<DetailTypologie> localOffers = null;
-        List<DetailTypologie> filtredOffers = null;
+        // Slice<DetailTypologie> localOffers = null;
+        // List<DetailTypologie> filtredOffers = null;
         NextPage responseNextPage = new NextPage(null, 0, false, false);
+
+        int roomQuantity = rooms.size();
+        int adults = rooms.stream().collect(Collectors.summingInt(Integer::intValue));
+                            
         
         // search if there is any available data 
         if (next.isAmadeusSearchable()) {
@@ -49,7 +52,7 @@ public class HotelSearchService {
                                                         next.getAmadeusNextParam());
             if (!amadeusOffers.isEmpty()) {
                 try {
-                    String nextLink = amadeusOffers.get(0).getResponse().getResult().get("meta").getAsJsonObject()
+                    String nextLink = amadeusOffers.get(amadeusOffers.size() - 1).getResponse().getResult().get("meta").getAsJsonObject()
                                                    .get("links").getAsJsonObject().get("next").getAsString();
                     responseNextPage.setAmadeusNext(nextLink);
                     responseNextPage.setAmadeusSearchable(true);
@@ -60,25 +63,25 @@ public class HotelSearchService {
             }           
         }
         // search if there is any available data 
-        if (next.isLocalSearchable()) {
-            localOffers = detailTypologieService.searchByCityAndDateAndNbr(adults, checkInDate, cityCode, next.getLocalNext());
-            responseNextPage.setLocalSearchable(localOffers.hasNext());
-            responseNextPage.setLocalNext(next.getLocalNext() + 1);
-            filtredOffers = localOffers.getContent();
-            // if there is a price filter and the list of offers != null
-            if (!localOffers.isEmpty()) {
-                if (priceRange.length > 0 ) {
-                    filtredOffers = filtredOffers.stream()
-                                                .filter(dt -> dt.filterByPriceRange(priceRange[0], priceRange[1]))
-                                                .collect(Collectors.toList());
-                }
-                if (!ratings.isEmpty()) {
-                    filtredOffers = filtredOffers.stream()
-                                                .filter(dt -> dt.getDetailHotel().getHotel().filterByStars(ratings))
-                                                .collect(Collectors.toList());
-                }
-            }
-        }
+        // if (next.isLocalSearchable()) {
+        //     localOffers = detailTypologieService.searchByCityAndDateAndNbr(adults, checkInDate, cityCode, next.getLocalNext());
+        //     responseNextPage.setLocalSearchable(localOffers.hasNext());
+        //     responseNextPage.setLocalNext(next.getLocalNext() + 1);
+        //     filtredOffers = localOffers.getContent();
+        //     // if there is a price filter and the list of offers != null
+        //     if (!localOffers.isEmpty()) {
+        //         if (priceRange.length > 0 ) {
+        //             filtredOffers = filtredOffers.stream()
+        //                                         .filter(dt -> dt.filterByPriceRange(priceRange[0], priceRange[1]))
+        //                                         .collect(Collectors.toList());
+        //         }
+        //         if (!ratings.isEmpty()) {
+        //             filtredOffers = filtredOffers.stream()
+        //                                         .filter(dt -> dt.getDetailHotel().getHotel().filterByStars(ratings))
+        //                                         .collect(Collectors.toList());
+        //         }
+        //     }
+        // }
 
         
         

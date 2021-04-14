@@ -92,12 +92,10 @@ public class AmadeusService {
                               .and("currency", "EUR")
                               .and("includeClosed", "false")
                               .and("paymentPolicy", "NONE")
-                              .and("includeClosed", "false")
                               .and("bestRateOnly", "true")
-                              .and("view", "FULL")
-                              .and("sort", "PRICE");
+                              .and("view", "FULL");
        
-        if (ratings.size() > 0) {
+        if (ratings != null && ratings.size() > 0) {
             String r = ratings.stream().map(rate -> rate.toString()).collect(Collectors.joining(","));
             params = params.and("ratings", r);
         }
@@ -107,17 +105,13 @@ public class AmadeusService {
         if (nextPage != null) {
             params = params.and("page[offset]", nextPage);
         }
+        
+        HotelOffer[] f = amadeusClient.shopping.hotelOffers.get(params);
 
-        List<HotelOffer> offers = Arrays.asList(amadeusClient.shopping.hotelOffers.get(params));
-        offers.addAll(Arrays.asList((HotelOffer[]) amadeusClient.next(offers.get(0))));
+        List<HotelOffer> offers = Arrays.asList(f);
+        //offers.addAll(Arrays.asList((HotelOffer[]) amadeusClient.next(offers.get(0))));
         return offers;
                                                                 
-    }
-
-    public HotelOffer[] next(HotelOffer[] res) throws ResponseException{
-
-        HotelOffer[] offers = (HotelOffer[]) amadeusClient.next(res[0]);
-        return offers;
     }
  
     public JsonObject flightOffersSearch(Map<String, String> mapParams) throws ResponseException {
