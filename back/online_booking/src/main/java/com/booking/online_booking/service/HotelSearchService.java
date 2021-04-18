@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 import com.amadeus.exceptions.ResponseException;
 import com.amadeus.resources.HotelOffer;
 import com.booking.online_booking.model.DetailTypologie;
+import com.booking.online_booking.utils.Dictionarie;
+import com.booking.online_booking.utils.HotelOfferResponse;
+import com.booking.online_booking.utils.HotelSearchResponse;
 import com.booking.online_booking.utils.NextPage;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +23,8 @@ public class HotelSearchService {
     @Autowired
     DetailTypologieService detailTypologieService;
 
-    public void searchOffers(String cityCode,
+
+    public HotelSearchResponse searchOffers(String cityCode,
                             String checkInDate,
                             String checkOutDate,
                             List<Integer> rooms,
@@ -31,6 +35,7 @@ public class HotelSearchService {
         // Slice<DetailTypologie> localOffers = null;
         // List<DetailTypologie> filtredOffers = null;
         NextPage responseNextPage = new NextPage(null, 0, false, false);
+        HotelSearchResponse hotelSearchResponse = new HotelSearchResponse(null, null, null);
 
         int roomQuantity = rooms.size();
         int adults = rooms.stream().collect(Collectors.summingInt(Integer::intValue));
@@ -39,7 +44,7 @@ public class HotelSearchService {
         // search if there is any available data 
         if (next.isAmadeusSearchable()) {
             String range = null;
-            if (priceRange.length > 0) {
+            if (priceRange != null && priceRange.length > 0) {
                 range = priceRange[0] + "-" + priceRange[1];
             }
             amadeusOffers = amadeusService.hotelSearch(cityCode, 
@@ -52,9 +57,7 @@ public class HotelSearchService {
                                                         next.getAmadeusNextParam());
             if (!amadeusOffers.isEmpty()) {
                 try {
-                    String nextLink = amadeusOffers.get(amadeusOffers.size() - 1).getResponse().getResult().get("meta").getAsJsonObject()
-                                                   .get("links").getAsJsonObject().get("next").getAsString();
-                    responseNextPage.setAmadeusNext(nextLink);
+                    responseNextPage.setAmadeusNext(amadeusOffers.get(amadeusOffers.size() - 1));
                     responseNextPage.setAmadeusSearchable(true);
                     
                 } catch (Exception e) {
@@ -83,7 +86,12 @@ public class HotelSearchService {
         //     }
         // }
 
+        if (amadeusOffers != null && !amadeusOffers.isEmpty()) {
+            hotelSearchResponse.setHotelOffers(HotelOfferResponse.extractHotelOfferResponses(amadeusOffers));
+            hotelSearchResponse.setNextPage(responseNextPage);
+            hotelSearchResponse.setDictionarie(Dictionarie.extractdiDictionarie(amadeusOffers.get(amadeusOffers.size() - 1)));
+        }
         
-        
+        return hotelSearchResponse;
     }
 }

@@ -1,6 +1,7 @@
 package com.booking.online_booking.service;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -53,21 +54,17 @@ public class AmadeusService {
     }
 
     // returns a list of location based on searchTerm and a subType creteria
-    public JsonObject airportAndCitySearch(String searchTerm, String subType) throws ResponseException {
-        Location[] locations = null;
-        JsonObject jbs = null;
+    public List<Location> airportAndCitySearch(String searchTerm, String subType) throws ResponseException {
+        List<Location> locations = null;
         if (!isInitialized) {
             initializeClient();
         }
 
-        locations = amadeusClient.referenceData.locations.get(Params.with("keyword", searchTerm)
-                                                                    .and("subType", subType));
- 
-        if (locations.length > 0) {
-            jbs = locations[0].getResponse().getResult();
-        }
+        locations = Arrays.asList(amadeusClient.referenceData.locations.get(Params.with("keyword", searchTerm)
+                                                                    .and("subType", subType)
+                                                                    .and("view", "LIGHT")));
         
-        return jbs;
+        return locations;
     }
 
     // search for hotel offers
@@ -95,7 +92,7 @@ public class AmadeusService {
                               .and("bestRateOnly", "true")
                               .and("view", "FULL");
        
-        if (ratings != null && ratings.size() > 0) {
+        if ((ratings != null) && !ratings.isEmpty()) {
             String r = ratings.stream().map(rate -> rate.toString()).collect(Collectors.joining(","));
             params = params.and("ratings", r);
         }
@@ -106,12 +103,8 @@ public class AmadeusService {
             params = params.and("page[offset]", nextPage);
         }
         
-        HotelOffer[] f = amadeusClient.shopping.hotelOffers.get(params);
-
-        List<HotelOffer> offers = Arrays.asList(f);
-        //offers.addAll(Arrays.asList((HotelOffer[]) amadeusClient.next(offers.get(0))));
-        return offers;
-                                                                
+        List<HotelOffer> offers = new ArrayList<>(Arrays.asList(amadeusClient.shopping.hotelOffers.get(params)));
+        return offers;                                                                
     }
  
     public JsonObject flightOffersSearch(Map<String, String> mapParams) throws ResponseException {

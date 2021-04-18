@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class OfferResponse {
     private String id;
     private int roomQuantity;
+    private String boardType;
     private List<Room> rooms;
     private int guests;
     private String currency;
@@ -23,18 +24,22 @@ public class OfferResponse {
     private String cancellationDeadline;;
     private String cancellationAmmount;
 
-    public static List<OfferResponse> extractOffers(List<Offer> offers) {
+    public static List<OfferResponse> extractOffers(Offer[] offers) {
         List<OfferResponse> resp = new ArrayList<>();
         for (Offer offer : offers) {
             OfferResponse or = new OfferResponse();
             or.setId(offer.getId());
             or.setRoomQuantity(offer.getRoomQuantity());
+            or.setBoardType(offer.getBoardType());
             or.setRooms(Room.extractRoom(offer.getRoom()));
             or.setGuests(offer.getGuests().getAdults());
             or.setCurrency(offer.getPrice().getCurrency());
             or.setTotal(Double.parseDouble(offer.getPrice().getTotal()));
-            //or.setPaymentType(offer.getPolicies().);
+            //or.setPaymentType(offer.getPolicies().getGuarantee().getAcceptedPayments().getMethod());
+            or.setCancellationDeadline(offer.getPolicies().getCancellation().getDeadline());
+            or.setCancellationAmmount(offer.getPolicies().getCancellation().getAmount());
+            resp.add(or);
         }
-        return null;
+        return resp;
     }
 }
