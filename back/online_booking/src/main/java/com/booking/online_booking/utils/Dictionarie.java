@@ -3,6 +3,7 @@ package com.booking.online_booking.utils;
 
 import com.amadeus.resources.HotelOffer;
 import com.google.gson.JsonObject;
+import com.google.gson.annotations.Expose;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,8 +14,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Dictionarie {
     //target currency
+    @Expose
     private String currency;
     // origin * this.rate = target_value
+    @Expose
     private double rate;
 
     public static Dictionarie extractdiDictionarie(HotelOffer h){

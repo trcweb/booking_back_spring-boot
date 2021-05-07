@@ -4,23 +4,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 import com.google.gson.annotations.Expose;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Data
 @NoArgsConstructor
-@Entity
-@Table(name = "categorie_vehicule")
-public class CategorieVehicule {
+public class Commission {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Expose
-    private Integer id_categorie;
+    private Integer id;
     @Expose
-    private String categorie;
+    private double pourcentage;
 }

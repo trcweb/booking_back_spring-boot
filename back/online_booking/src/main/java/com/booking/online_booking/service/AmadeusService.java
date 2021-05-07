@@ -13,9 +13,14 @@ import com.amadeus.Amadeus;
 import com.amadeus.Params;
 import com.amadeus.exceptions.ResponseException;
 import com.amadeus.resources.FlightOfferSearch;
+import com.amadeus.resources.HotelBooking;
 import com.amadeus.resources.HotelOffer;
 import com.amadeus.resources.Location;
+import com.booking.online_booking.utils.HotelBookingRequest;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -105,6 +110,52 @@ public class AmadeusService {
         
         List<HotelOffer> offers = new ArrayList<>(Arrays.asList(amadeusClient.shopping.hotelOffers.get(params)));
         return offers;                                                                
+    }
+
+    /**
+     * searches avialable offers for a given hotel
+     * 
+     * @param hotelId 
+     * @param checkInDate 
+     * @param checkOutDate
+     * @param adults
+     * @param roomQuantity
+     * @return the hoteloffer object containnig all available offers
+     * @throws ResponseException
+     */
+    public HotelOffer hotelOfferSearch(String hotelId, 
+                                 String checkInDate, 
+                                 String checkOutDate, 
+                                 int adults,
+                                 int roomQuantity) throws ResponseException{
+
+        Params p = Params.with("hotelId", hotelId)
+                         .and("checkInDate", checkInDate)
+                         .and("checkOutDate", checkOutDate)
+                         .and("adults", adults)
+                         .and("roomQuantity", roomQuantity)
+                         .and("currency", "EUR");
+                                    
+        HotelOffer h = amadeusClient.shopping.hotelOffersByHotel.get(p);
+        return h;
+
+    }
+
+    public HotelOffer hotelOfferAvailibility(String offerId) throws ResponseException{
+                                    
+        HotelOffer h = amadeusClient.shopping.hotelOffer(offerId).get();
+        return h;
+
+    }
+
+    public HotelBooking hotelOfferBooking(HotelBookingRequest bookRequest) throws ResponseException{
+        Gson gss = new GsonBuilder().create();
+        String con = gss.toJson(bookRequest);
+        JsonObject objectFromString = JsonParser.parseString(con).getAsJsonObject();
+        JsonObject js = new JsonObject();
+        js.add("data", objectFromString);
+        HotelBooking[] booking = amadeusClient.booking.hotelBookings.post(js);
+        return booking[0];
     }
  
     public JsonObject flightOffersSearch(Map<String, String> mapParams) throws ResponseException {

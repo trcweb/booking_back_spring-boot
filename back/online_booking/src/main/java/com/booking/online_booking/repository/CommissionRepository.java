@@ -1,13 +1,11 @@
 package com.booking.online_booking.repository;
 
-import com.booking.online_booking.model.Role;
+import com.booking.online_booking.model.Commission;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Integer>{
+public interface CommissionRepository extends JpaRepository<Commission, Integer> {
 
-    Role findByName(String name);
-    
 }
