@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.amadeus.resources.HotelOffer.Offer;
+import com.google.gson.annotations.Expose;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,15 +14,25 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OfferResponse {
+    @Expose
     private String id;
+    @Expose
     private int roomQuantity;
+    @Expose
     private String boardType;
+    @Expose
     private List<Room> rooms;
+    @Expose
     private int guests;
+    @Expose
     private String currency;
+    @Expose
     private double total;
+    @Expose
     private String paymentType;
+    @Expose
     private String cancellationDeadline;;
+    @Expose
     private String cancellationAmmount;
 
     public static List<OfferResponse> extractOffers(Offer[] offers) {
