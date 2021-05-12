@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import com.amadeus.resources.HotelOffer.Hotel;
 import com.amadeus.resources.HotelOffer.MediaURI;
-import com.google.gson.annotations.Expose;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,37 +15,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HotelResponse {
-    @Expose
     private String id_hotel;
-    @Expose
     private Integer nbr_etoile;
-    @Expose
     private String nom;
-    @Expose
     private String addresse;
-    @Expose
     private String pays;
-    @Expose
     private String ville_code_iata;
-    @Expose
     private String description;
-    @Expose
     private List<String> amenities;
-    @Expose
     private List<String> media;
-    @Expose
     private String fix;
-    @Expose
     private String fax;
-    @Expose
     private String mobile;
-    @Expose
     private String responsable_hotel;
-    @Expose
     private String email_responsable;
-    @Expose
     private String email_hotel;
-    @Expose
     private String etat_hotel;
 
     public static HotelResponse extracHotelResponse(Hotel h){

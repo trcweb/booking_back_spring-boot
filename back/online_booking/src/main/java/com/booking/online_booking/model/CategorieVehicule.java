@@ -6,7 +6,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.google.gson.annotations.Expose;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,8 +18,6 @@ public class CategorieVehicule {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Expose
     private Integer id_categorie;
-    @Expose
     private String categorie;
 }

@@ -9,9 +9,7 @@ import com.amadeus.resources.HotelBooking;
 import com.amadeus.resources.Location;
 import com.booking.online_booking.service.HotelSearchService;
 import com.booking.online_booking.utils.HotelBookingRequest;
-import com.booking.online_booking.utils.HotelBookingResponse;
 import com.booking.online_booking.utils.HotelSearchResponse;
-import com.booking.online_booking.utils.LocationResponse;
 import com.booking.online_booking.utils.NextPage;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +40,8 @@ public class HotelsController {
      * @throws ResponseException
      */
     @GetMapping("/airport-cities-search/{st}/{sub}")
-    public List<LocationResponse> airportAndCitySearch(@PathVariable("st") String searchTerm, @PathVariable("sub") String subType) throws ResponseException {
-        List<LocationResponse> lr = LocationResponse.extractLoaction(hotelSearchService.airportAndCitySearch(searchTerm, subType));
-        return lr;
+    public List<Location> airportAndCitySearch(@PathVariable("st") String searchTerm, @PathVariable("sub") String subType) throws ResponseException {
+        return hotelSearchService.airportAndCitySearch(searchTerm, subType);
     }
 
     /**
@@ -113,9 +110,7 @@ public class HotelsController {
      * @throws ResponseException
      */
     @PostMapping("/hotel-booking")
-    public HotelBookingResponse bookOffer(@RequestBody @Valid HotelBookingRequest bookingRequest) throws ResponseException {
-        HotelBooking h = hotelSearchService.bookOffer(bookingRequest);
-        HotelBookingResponse r = HotelBookingResponse.extractBookingResponse(h);
-        return r;
+    public HotelBooking bookOffer(@RequestBody @Valid HotelBookingRequest bookingRequest) throws ResponseException {
+        return hotelSearchService.bookOffer(bookingRequest);
     }
 }

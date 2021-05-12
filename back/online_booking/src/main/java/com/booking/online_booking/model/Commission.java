@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.google.gson.annotations.Expose;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,8 +16,6 @@ public class Commission {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Expose
     private Integer id;
-    @Expose
     private double pourcentage;
 }

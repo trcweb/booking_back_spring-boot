@@ -1,7 +1,6 @@
 package com.booking.online_booking.utils;
 
 import com.amadeus.resources.HotelOffer;
-import com.google.gson.annotations.Expose;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,13 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NextPage {
 
-    @Expose
     private String amadeusNext;
-    @Expose
     private int localNext;
-    @Expose
     private boolean amadeusSearchable;
-    @Expose
     private boolean localSearchable;
 
     public String getAmadeusNextParam(){
@@ -28,7 +23,7 @@ public class NextPage {
             if (parts.length > 1) {
                 pageNumber = parts[parts.length - 1];
             }                        
-        }        
+        }
         return pageNumber;
     }
 

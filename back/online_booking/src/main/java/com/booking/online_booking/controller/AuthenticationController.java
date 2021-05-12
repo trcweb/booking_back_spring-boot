@@ -4,6 +4,8 @@ import javax.validation.Valid;
 
 import com.booking.online_booking.exception.CustomException;
 import com.booking.online_booking.model.Account;
+import com.booking.online_booking.model.User;
+import com.booking.online_booking.model.UserAgence;
 import com.booking.online_booking.repository.AccountRepository;
 import com.booking.online_booking.repository.UserAgenceRepository;
 import com.booking.online_booking.repository.UserRepository;
@@ -58,9 +60,13 @@ public class AuthenticationController {
         refreshTokenService.setRefreshToken(a.getId_account(), refreshToken);
 
         if (a.getRole().getName().equals("AGENCE")) {
-            authResponse.setUserAgence(userAgenceRepository.findByAccountEmail(username));
+            UserAgence ua = userAgenceRepository.findByAccountEmail(username);
+            ua.getAccount().setPassword(null);
+            authResponse.setUserAgence(ua);
         } else {
-            authResponse.setUser(userRepository.findByAccountEmail(username));
+            User usr = userRepository.findByAccountEmail(username);
+            usr.getAccount().setPassword(null);
+            authResponse.setUser(usr);
         }
 
         authResponse.setToken(token);
@@ -86,9 +92,13 @@ public class AuthenticationController {
         String newRefreshToken = refreshTokenService.creatRefreshToken();
         refreshTokenService.setRefreshToken(a.getId_account(), newRefreshToken);
         if (a.getRole().getName().equals("AGENCE")) {
-            response.setUserAgence(userAgenceRepository.findByAccountEmail(a.getEmail()));
+            UserAgence ua = userAgenceRepository.findByAccountEmail(a.getEmail());
+            ua.getAccount().setPassword(null);
+            response.setUserAgence(ua);
         } else {
-            response.setUser(userRepository.findByAccountEmail(a.getEmail()));
+            User usr = userRepository.findByAccountEmail(a.getEmail());
+            usr.getAccount().setPassword(null);
+            response.setUser(usr);
         }
         response.setToken(token);
         response.setRefreshToken(newRefreshToken);

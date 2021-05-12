@@ -62,8 +62,7 @@ public class HotelSearchService {
         HotelSearchResponse hotelSearchResponse = new HotelSearchResponse();
 
         int roomQuantity = rooms.size();
-        int adults = rooms.stream().collect(Collectors.summingInt(Integer::intValue));
-                            
+        int adults = rooms.stream().collect(Collectors.summingInt(Integer::intValue));                            
         
         // search if there is any available data
         if (next.isAmadeusSearchable()) {
@@ -109,21 +108,20 @@ public class HotelSearchService {
         //         }
         //     }
         // }
-
         if (amadeusOffers != null && !amadeusOffers.isEmpty()) {
-            hotelSearchResponse.setHotelOffers(HotelOfferResponse.extractHotelOfferResponses(amadeusOffers));
-            hotelSearchResponse.setNextPage(responseNextPage);
             hotelSearchResponse.setDictionarie(Dictionarie.extractdiDictionarie(amadeusOffers.get(amadeusOffers.size() - 1)));
-            if (auth instanceof AnonymousAuthenticationToken) {
-                hotelSearchResponse.setCommission(roleRepository.findByName("ANONYMOUS")
-                                                                .getCommission());
-            } else {
-                hotelSearchResponse.setCommission(roleRepository.findByName(auth.getAuthorities()
-                                                                                .iterator()
-                                                                                .next()
-                                                                                .getAuthority())
-                                                                .getCommission());
-            }
+            hotelSearchResponse.setHotelOffers(HotelOfferResponse.extractHotelOfferResponses(amadeusOffers));
+        }
+        hotelSearchResponse.setNextPage(responseNextPage);
+        if (auth == null || auth instanceof AnonymousAuthenticationToken) {
+            hotelSearchResponse.setCommission(roleRepository.findByName("ANONYMOUS")
+                                                            .getCommission());
+        } else {
+            hotelSearchResponse.setCommission(roleRepository.findByName(auth.getAuthorities()
+                                                                            .iterator()
+                                                                            .next()
+                                                                            .getAuthority())
+                                                            .getCommission());
         }
         return hotelSearchResponse;
     }

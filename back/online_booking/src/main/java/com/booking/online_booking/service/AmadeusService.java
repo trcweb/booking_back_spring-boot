@@ -107,7 +107,7 @@ public class AmadeusService {
         if (nextPage != null) {
             params = params.and("page[offset]", nextPage);
         }
-        
+        System.out.println("params: " + params);
         List<HotelOffer> offers = new ArrayList<>(Arrays.asList(amadeusClient.shopping.hotelOffers.get(params)));
         return offers;                                                                
     }

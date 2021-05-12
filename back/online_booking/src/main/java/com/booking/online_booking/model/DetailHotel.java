@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.google.gson.annotations.Expose;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,17 +22,12 @@ public class DetailHotel {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Expose
     private Integer id_detailhotel;
 
     @ManyToOne
     @JoinColumn(name = "id_hotel")
-    @Expose
     private Hotel hotel;
-    @Expose
     private Date date_debut;
-    @Expose
     private Date date_fin;
-    @Expose
     private String detail_hotel;
 }

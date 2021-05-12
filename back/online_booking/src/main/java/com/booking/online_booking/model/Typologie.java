@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.google.gson.annotations.Expose;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,14 +16,9 @@ public class Typologie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Expose
     private Integer id_typologie;
-    @Expose
     private int nbr_lit;
-    @Expose
     private String type_lit;
-    @Expose
     private String designation;
-    @Expose
     private int nbr_personnes;
 }

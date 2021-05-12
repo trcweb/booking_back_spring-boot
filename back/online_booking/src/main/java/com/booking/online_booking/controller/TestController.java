@@ -77,7 +77,7 @@ public class TestController {
 
     @GetMapping("/test1")
     public List<HotelOffer> hotelSearch() throws ResponseException {
-        return amadeusService.hotelSearch("LON", "2021-04-18", "2021-04-20", 3, 2, null, null, null);
+        return amadeusService.hotelSearch("LON", "2021-05-18", "2021-05-20", 3, 2, null, null, null);
     }
 
     @PostMapping("/test2")

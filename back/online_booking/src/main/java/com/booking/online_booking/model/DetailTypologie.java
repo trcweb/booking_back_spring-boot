@@ -8,7 +8,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.google.gson.annotations.Expose;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,19 +20,15 @@ public class DetailTypologie {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Expose
     private Integer id_detailtypologie;
 
     @ManyToOne
     @JoinColumn(name = "id_detailhotel")
-    @Expose
     private DetailHotel detailHotel; 
 
     @ManyToOne
     @JoinColumn(name = "id_typologie")
-    @Expose
     private Typologie typologie;
-    @Expose
     private Double prix_typologie;
 
     public boolean filterByPriceRange(int start, int end){

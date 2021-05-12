@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.google.gson.annotations.Expose;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,17 +22,12 @@ public class CreditVoiture {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Expose
     private Integer id_creditv;
     @OneToOne
     @JoinColumn(name = "id_solde")
-    @Expose
     private SoldeGarentie garentie;
-    @Expose
     private Double solde;
-    @Expose
     private Date date;
-    @Expose
     private String type;
     
 }
