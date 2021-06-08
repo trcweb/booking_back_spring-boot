@@ -149,7 +149,7 @@ public class HotelSearchService {
                                                          null, 
                                                          Dictionarie.extractdiDictionarie(h),
                                                          null);
-        if (auth instanceof AnonymousAuthenticationToken) {
+        if (auth == null || auth instanceof AnonymousAuthenticationToken) {
             sr.setCommission(roleRepository.findByName("ANONYMOUS")
                                                             .getCommission());
         } else {
@@ -178,7 +178,7 @@ public class HotelSearchService {
                                                          Dictionarie.extractdiDictionarie(h),
                                                          null);
 
-        if (auth instanceof AnonymousAuthenticationToken) {
+        if (auth == null || auth instanceof AnonymousAuthenticationToken) {
             sr.setCommission(roleRepository.findByName("ANONYMOUS")
                                                             .getCommission());
         } else {

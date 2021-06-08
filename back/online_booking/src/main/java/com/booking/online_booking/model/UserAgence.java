@@ -7,7 +7,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,10 +26,17 @@ public class UserAgence {
 
     @OneToOne
     @JoinColumn(name = "id_account")
+    @NotNull
+    @Valid
     private Account account;
+    @NotEmpty
     private String matricule_fiscale;
+    @NotEmpty
     private String registre_commerce;
+    @NotEmpty
     private String raison_social;
+    @NotEmpty
     private String adresse_agence;
+    @NotEmpty
     private String mobile_agence;
 }

@@ -59,9 +59,9 @@ public class JwtTokenProvider {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException exp) {
-            throw new CustomException("Expired JWT token", HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new CustomException("Expired JWT token", HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
-            throw new CustomException("Invalid JWT token", HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new CustomException("Invalid JWT token", HttpStatus.UNAUTHORIZED);
         }
     }
 

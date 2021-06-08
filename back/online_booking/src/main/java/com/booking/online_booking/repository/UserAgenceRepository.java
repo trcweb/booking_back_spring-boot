@@ -12,4 +12,7 @@ public interface UserAgenceRepository extends JpaRepository<UserAgence, Integer>
     
     @Query(value = "SELECT u.* FROM user_agence u inner join account a on a.id_account = u.id_account WHERE a.email = :name ", nativeQuery = true)
     UserAgence findByAccountEmail(@Param("name") String username);
+
+    @Query(value = "select u from UserAgence u where u.matricule_fiscale = :matricule")
+    UserAgence findByMatriculeFiscale(@Param("matricule") String matricule_fiscale);
 }

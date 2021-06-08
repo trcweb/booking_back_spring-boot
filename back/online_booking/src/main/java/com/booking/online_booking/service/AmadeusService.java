@@ -13,12 +13,14 @@ import com.amadeus.Amadeus;
 import com.amadeus.Params;
 import com.amadeus.exceptions.ResponseException;
 import com.amadeus.resources.FlightOfferSearch;
+import com.amadeus.resources.FlightPrice;
 import com.amadeus.resources.HotelBooking;
 import com.amadeus.resources.HotelOffer;
 import com.amadeus.resources.Location;
 import com.booking.online_booking.utils.HotelBookingRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -107,7 +109,6 @@ public class AmadeusService {
         if (nextPage != null) {
             params = params.and("page[offset]", nextPage);
         }
-        System.out.println("params: " + params);
         List<HotelOffer> offers = new ArrayList<>(Arrays.asList(amadeusClient.shopping.hotelOffers.get(params)));
         return offers;                                                                
     }
@@ -134,7 +135,8 @@ public class AmadeusService {
                          .and("checkOutDate", checkOutDate)
                          .and("adults", adults)
                          .and("roomQuantity", roomQuantity)
-                         .and("currency", "EUR");
+                         .and("currency", "EUR")
+                         .and("view", "FULL_ALL_IMAGES");;
                                     
         HotelOffer h = amadeusClient.shopping.hotelOffersByHotel.get(p);
         return h;
@@ -158,6 +160,13 @@ public class AmadeusService {
         return booking[0];
     }
  
+    /**
+     * a json object response as provided by the amadeus api  
+     * 
+     * @param mapParams the query params
+     * @return
+     * @throws ResponseException
+     */
     public JsonObject flightOffersSearch(Map<String, String> mapParams) throws ResponseException {
         if (!isInitialized) {
             initializeClient();
@@ -182,7 +191,25 @@ public class AmadeusService {
         }
         
         return result;
+    }
 
+    /**
+     * confirms the price of a given flightOffer
+     * 
+     * @param flightOffer
+     * @return
+     * @throws ResponseException
+     */
+    public JsonObject flightOffersPrice(JsonObject flightOffer) throws ResponseException {
+        JsonArray flightOffers = new JsonArray();
+        flightOffers.add(flightOffer);
+        JsonObject data = new JsonObject();
+        data.addProperty("type", "flight-offers-pricing");
+        data.add("flightOffers", flightOffers);
+        JsonObject holder = new JsonObject();
+        holder.add("data", data);
+        FlightPrice fp = amadeusClient.shopping.flightOffersSearch.pricing.post(holder);
+        return fp.getResponse().getResult();
     }
 
    
