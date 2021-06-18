@@ -211,6 +211,5 @@ public class AmadeusService {
         FlightPrice fp = amadeusClient.shopping.flightOffersSearch.pricing.post(holder);
         return fp.getResponse().getResult();
     }
-
    
 }

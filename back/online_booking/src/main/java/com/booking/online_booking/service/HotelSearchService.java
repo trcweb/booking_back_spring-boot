@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class HotelSearchService {
-    
+
     @Autowired
     AmadeusService amadeusService;
     @Autowired
@@ -29,10 +29,12 @@ public class HotelSearchService {
     @Autowired
     RoleRepository roleRepository;
 
-   
-   public List<Location> airportAndCitySearch(String searchTerm, String subType) throws ResponseException {
-    return amadeusService.airportAndCitySearch(searchTerm, subType);
-   }
+    @Autowired
+    EmailService emailService;
+
+    public List<Location> airportAndCitySearch(String searchTerm, String subType) throws ResponseException {
+        return amadeusService.airportAndCitySearch(searchTerm, subType);
+    }
 
     /**
      * searches hotel offers for given search params
@@ -47,14 +49,9 @@ public class HotelSearchService {
      * @return HotelSearchResponse
      * @throws ResponseException
      */
-    public HotelSearchResponse searchOffers(String cityCode,
-                            String checkInDate,
-                            String checkOutDate,
-                            List<Integer> rooms,
-                            List<Integer> ratings,
-                            int[] priceRange,
-                            NextPage next,
-                            Authentication auth) throws ResponseException{
+    public HotelSearchResponse searchOffers(String cityCode, String checkInDate, String checkOutDate,
+            List<Integer> rooms, List<Integer> ratings, int[] priceRange, NextPage next, Authentication auth)
+            throws ResponseException {
         List<HotelOffer> amadeusOffers = null;
         // Slice<DetailTypologie> localOffers = null;
         // List<DetailTypologie> filtredOffers = null;
@@ -62,66 +59,58 @@ public class HotelSearchService {
         HotelSearchResponse hotelSearchResponse = new HotelSearchResponse();
 
         int roomQuantity = rooms.size();
-        int adults = rooms.stream().collect(Collectors.summingInt(Integer::intValue));                            
-        
+        int adults = rooms.stream().collect(Collectors.summingInt(Integer::intValue));
+
         // search if there is any available data
         if (next.isAmadeusSearchable()) {
             String range = null;
             if (priceRange != null && priceRange.length > 0) {
                 range = priceRange[0] + "-" + priceRange[1];
             }
-            amadeusOffers = amadeusService.hotelSearch(cityCode, 
-                                                        checkInDate, 
-                                                        checkOutDate, 
-                                                        adults, 
-                                                        roomQuantity, 
-                                                        ratings, 
-                                                        range,
-                                                        next.getAmadeusNextParam());
+            amadeusOffers = amadeusService.hotelSearch(cityCode, checkInDate, checkOutDate, adults, roomQuantity,
+                    ratings, range, next.getAmadeusNextParam());
             if (!amadeusOffers.isEmpty()) {
                 try {
                     responseNextPage.setAmadeusNext(amadeusOffers.get(amadeusOffers.size() - 1));
                     responseNextPage.setAmadeusSearchable(true);
-                    
+
                 } catch (Exception e) {
                     System.out.println("exceptions while creating next link from amadeus response");
                 }
-            }           
+            }
         }
-        // search if there is any available data 
+        // search if there is any available data
         // if (next.isLocalSearchable()) {
-        //     localOffers = detailTypologieService.searchByCityAndDateAndNbr(adults, checkInDate, cityCode, next.getLocalNext());
-        //     responseNextPage.setLocalSearchable(localOffers.hasNext());
-        //     responseNextPage.setLocalNext(next.getLocalNext() + 1);
-        //     filtredOffers = localOffers.getContent();
-        //     // if there is a price filter and the list of offers != null
-        //     if (!localOffers.isEmpty()) {
-        //         if (priceRange.length > 0 ) {
-        //             filtredOffers = filtredOffers.stream()
-        //                                         .filter(dt -> dt.filterByPriceRange(priceRange[0], priceRange[1]))
-        //                                         .collect(Collectors.toList());
-        //         }
-        //         if (!ratings.isEmpty()) {
-        //             filtredOffers = filtredOffers.stream()
-        //                                         .filter(dt -> dt.getDetailHotel().getHotel().filterByStars(ratings))
-        //                                         .collect(Collectors.toList());
-        //         }
-        //     }
+        // localOffers = detailTypologieService.searchByCityAndDateAndNbr(adults,
+        // checkInDate, cityCode, next.getLocalNext());
+        // responseNextPage.setLocalSearchable(localOffers.hasNext());
+        // responseNextPage.setLocalNext(next.getLocalNext() + 1);
+        // filtredOffers = localOffers.getContent();
+        // // if there is a price filter and the list of offers != null
+        // if (!localOffers.isEmpty()) {
+        // if (priceRange.length > 0 ) {
+        // filtredOffers = filtredOffers.stream()
+        // .filter(dt -> dt.filterByPriceRange(priceRange[0], priceRange[1]))
+        // .collect(Collectors.toList());
+        // }
+        // if (!ratings.isEmpty()) {
+        // filtredOffers = filtredOffers.stream()
+        // .filter(dt -> dt.getDetailHotel().getHotel().filterByStars(ratings))
+        // .collect(Collectors.toList());
+        // }
+        // }
         // }
         if (amadeusOffers != null && !amadeusOffers.isEmpty()) {
-            hotelSearchResponse.setDictionarie(Dictionarie.extractdiDictionarie(amadeusOffers.get(amadeusOffers.size() - 1)));
+            hotelSearchResponse
+                    .setDictionarie(Dictionarie.extractdiDictionarie(amadeusOffers.get(amadeusOffers.size() - 1)));
             hotelSearchResponse.setHotelOffers(HotelOfferResponse.extractHotelOfferResponses(amadeusOffers));
         }
         hotelSearchResponse.setNextPage(responseNextPage);
         if (auth == null || auth instanceof AnonymousAuthenticationToken) {
-            hotelSearchResponse.setCommission(roleRepository.findByName("ANONYMOUS")
-                                                            .getCommission());
+            hotelSearchResponse.setCommission(roleRepository.findByName("ANONYMOUS").getCommission());
         } else {
-            hotelSearchResponse.setCommission(roleRepository.findByName(auth.getAuthorities()
-                                                                            .iterator()
-                                                                            .next()
-                                                                            .getAuthority())
-                                                            .getCommission());
+            hotelSearchResponse.setCommission(
+                    roleRepository.findByName(auth.getAuthorities().iterator().next().getAuthority()).getCommission());
         }
         return hotelSearchResponse;
     }
@@ -132,32 +121,24 @@ public class HotelSearchService {
      * @param hotelId
      * @param checkInDate
      * @param checkOutDate
-     * @param rooms the list of adults by room, every element is a room with that number as guests
+     * @param rooms        the list of adults by room, every element is a room with
+     *                     that number as guests
      * @return HotelSearchResponse object containing one HotelOfferResponse
      * @throws ResponseException
      */
-    public HotelSearchResponse hotelOfferSearch(String hotelId, 
-                                String checkInDate, 
-                                String checkOutDate, 
-                                List<Integer> rooms,
-                                Authentication auth) throws ResponseException{
-    
+    public HotelSearchResponse hotelOfferSearch(String hotelId, String checkInDate, String checkOutDate,
+            List<Integer> rooms, Authentication auth) throws ResponseException {
+
         int roomQuantity = rooms.size();
         int adults = rooms.stream().collect(Collectors.summingInt(Integer::intValue));
         HotelOffer h = amadeusService.hotelOfferSearch(hotelId, checkInDate, checkOutDate, adults, roomQuantity);
-        HotelSearchResponse sr = new HotelSearchResponse(List.of(HotelOfferResponse.extractHotelOfferResponses(h)) ,
-                                                         null, 
-                                                         Dictionarie.extractdiDictionarie(h),
-                                                         null);
+        HotelSearchResponse sr = new HotelSearchResponse(List.of(HotelOfferResponse.extractHotelOfferResponses(h)),
+                null, Dictionarie.extractdiDictionarie(h), null);
         if (auth == null || auth instanceof AnonymousAuthenticationToken) {
-            sr.setCommission(roleRepository.findByName("ANONYMOUS")
-                                                            .getCommission());
+            sr.setCommission(roleRepository.findByName("ANONYMOUS").getCommission());
         } else {
-            sr.setCommission(roleRepository.findByName(auth.getAuthorities()
-                                                                            .iterator()
-                                                                            .next()
-                                                                            .getAuthority())
-                                                            .getCommission());
+            sr.setCommission(
+                    roleRepository.findByName(auth.getAuthorities().iterator().next().getAuthority()).getCommission());
         }
         return sr;
     }
@@ -169,24 +150,18 @@ public class HotelSearchService {
      * @return HotelSearchResponse with one HotelOffer
      * @throws ResponseException
      */
-    public HotelSearchResponse hotelOfferAvailibility(String offerId, Authentication auth) throws ResponseException{
-    
+    public HotelSearchResponse hotelOfferAvailibility(String offerId, Authentication auth) throws ResponseException {
+
         HotelOffer h = amadeusService.hotelOfferAvailibility(offerId);
         System.out.println(h);
-        HotelSearchResponse sr = new HotelSearchResponse(List.of(HotelOfferResponse.extractHotelOfferResponses(h)) ,
-                                                         null, 
-                                                         Dictionarie.extractdiDictionarie(h),
-                                                         null);
+        HotelSearchResponse sr = new HotelSearchResponse(List.of(HotelOfferResponse.extractHotelOfferResponses(h)),
+                null, Dictionarie.extractdiDictionarie(h), null);
 
         if (auth == null || auth instanceof AnonymousAuthenticationToken) {
-            sr.setCommission(roleRepository.findByName("ANONYMOUS")
-                                                            .getCommission());
+            sr.setCommission(roleRepository.findByName("ANONYMOUS").getCommission());
         } else {
-            sr.setCommission(roleRepository.findByName(auth.getAuthorities()
-                                                                            .iterator()
-                                                                            .next()
-                                                                            .getAuthority())
-                                                            .getCommission());
+            sr.setCommission(
+                    roleRepository.findByName(auth.getAuthorities().iterator().next().getAuthority()).getCommission());
         }
         return sr;
     }
@@ -199,6 +174,16 @@ public class HotelSearchService {
      * @throws ResponseException
      */
     public HotelBooking bookOffer(HotelBookingRequest bookingRequest) throws ResponseException {
-        return amadeusService.hotelOfferBooking(bookingRequest);
+        HotelBooking bkg = amadeusService.hotelOfferBooking(bookingRequest);
+        StringBuilder b = new StringBuilder();
+        b.append("Informations de reservation: \n");
+        b.append("id de reservation: " + bkg.getId() + "\n");
+        b.append("id de confirmation: " + bkg.getProviderConfirmationId() + "\n");
+        b.append("type: " + bkg.getType() + "\n");
+        b.append("code du systeme origin: " + bkg.getAssociatedRecords()[0].getOriginSystemCode() + "\n");
+        b.append("reference: " + bkg.getAssociatedRecords()[0].getReference() + "\n");
+        emailService.sendSimpleMessage(bookingRequest.getGuests()[0].getContact().getEmail(), "Reservation Record",
+                b.toString());
+        return bkg;
     }
 }
